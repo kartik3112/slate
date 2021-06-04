@@ -3,13 +3,11 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
+  - <a href='https://zoicraze.co.in'>Main Website</a>
+  - <a href='https://zoicrazeshopping.com'>Shopping Website</a>
 
 includes:
   - errors
@@ -21,221 +19,340 @@ code_clipboard: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Zoi Craze API! You can use our API to access Zoi Craze API endpoints, which can get information on associate profiles, wallet balance in our database.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+> Make sure to replace `{ACCESS_TOKEN}` with your Access Token retrieved from Associate LOGIN endpoint.
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Zoi Craze uses Access TOKEN to allow access to the API. You can get access token at [Login Endpoint](#login).
 
-# Authentication
+Zoi Craze expects for the Acces Token to be included in all API requests to the server in a header that looks like the following:
+
+`Authorization: Bearer {ACCESS_TOKEN}`
+
+<aside class="notice">
+You must replace <code>{ACCESS_TOKEN}</code> with Access Token.
+</aside>
+
+# Associate
+
+## Login
+
+This endpoint retrieve Access Token by `username` and `password`
+
+```shell
+curl "https://zoicraze.co.in/api/associate/login"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "SUCCESS",
+    "access_token": "{ACCESS_TOKEN}",
+}
+```
+
+### HTTP Request
+
+`POST https://zoicraze.co.in/api/associate/login`
+
+### HTTP Headers
+
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+
+### Body Parameters
+
+Parameter | Type | Description
+--------- | ------- | -----------
+username | `string` | username, `required`, cannot be left blank!
+password | `string` | password, `required`, cannot be left blank!
+
+## Profile
+
+This endpoint retrieves associate profile.
 
 > To authorize, use this code:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```shell
+# With shell, you can just pass the correct header with each request
+curl "https://zoicraze.co.in/api/associate/me" \
+  -H "Authorization: Bearer {ACCESS_TOKEN}"
 ```
 
-```python
-import kittn
+> The above command returns JSON structured like this:
 
-api = kittn.authorize('meowmeowmeow')
+```json
+{
+	"status": "SUCCESS",
+	"response": {
+		"id": 1,
+		"username": "{USERNAME}",
+		"full_name": "{FULLNAME}",
+		"mobile": "{MOBILE}",
+		"email": "{EMAIL}",
+		"created_at": "23 May 2021",
+		"details": {
+			"address": "{ADDRESS}",
+			"pincode": "{PINCODE}",
+			"city": "{CITY}",
+			"district": "{DISTRICT}",
+			"state": "{STATE}",
+			"country": "{COUNTRY}"
+		},
+		"wallet_balance": {
+			"shopping_wallet": "{SHOPPING_WALLET_BALANCE}"
+		},
+		"no_of_ids": 1,
+		"is_topup": "Active",
+		"is_active": "Active",
+		"package": {
+			"id": "{ID}",
+			"amount": "{AMOUNT}",
+			"name": "{PACKAGE_NAME}",
+			"description": "{PACKAGE_DESCRIPTION}",
+			"status": "Active"
+		},
+		"shop_point": 1500
+	}
+}
 ```
+
+### HTTP Request
+
+`GET https://zoicraze.co.in/api/associate/me`
+
+### HTTP Headers
+
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+Authorization | `Bearer {ACCESS_TOKEN}`
+
+## Get Balance
+
+This endpoint retrieves associate shopping wallet balance.
+
+> To authorize, use this code:
 
 ```shell
 # With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
+curl "https://zoicraze.co.in/api/associate/get_balance" \
+  -H "Authorization: Bearer {ACCESS_TOKEN}"
 ```
 
-```javascript
-const kittn = require('kittn');
+> The above command returns JSON structured like this:
 
-let api = kittn.authorize('meowmeowmeow');
+```json
+{
+	"status": "SUCCESS",
+	"response": {
+		"id": "{ID}",
+		"username": "{USERNAME}",
+		"wallet_balance": {
+			"shopping_wallet": "{SHOPPING_WALLET_BALANCE}"
+		}
+	}
+}
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+### HTTP Request
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+`GET https://zoicraze.co.in/api/associate/get_balance`
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+### HTTP Headers
 
-`Authorization: meowmeowmeow`
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+Authorization | `Bearer {ACCESS_TOKEN}`
+
+## Deduct Wallet
+
+This endpoint deducts fund from shopping wallet of associate.
+
+> To authorize, use this code:
+
+```shell
+# With shell, you can just pass the correct header with each request
+curl "https://zoicraze.co.in/api/associate/deduct_wallet" \
+  -H "Authorization: Bearer {ACCESS_TOKEN}"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+	"status": "SUCCESS",
+	"response": {
+		"id": "{ID}",
+		"username":"{USERNAME}",
+		"remark": "{REMARK}",
+		"amount":"{AMMOUNT}",
+		"transaction_type": "{TRANSACTION_TYPE}",
+		"reference_no": "{REFERENCE_NO}",
+		"wallet_balance": {
+			"shopping_wallet": "{SHOPPING_WALLET_BALANCE}"
+		}
+	}
+}
+```
+
+### HTTP Request
+
+`POST https://zoicraze.co.in/api/associate/deduct_wallet`
+
+### HTTP Headers
+
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+Authorization | `Bearer {ACCESS_TOKEN}`
+
+### Body Parameters
+
+Parameter | Type | Description
+--------- | ------- | -----------
+amount 	  | `integer` | amount, `required`, cannot be left blank!
+order_no  | `integer` | order_no, `required`, cannot be left blank!
+
+## Transaction Revert
+
+This endpoint revert transaction back to previous.
+
+> To authorize, use this code:
+
+```shell
+# With shell, you can just pass the correct header with each request
+curl "https://zoicraze.co.in/api/associate/transaction_revert" \
+  -H "Authorization: Bearer {ACCESS_TOKEN}"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+	"status": "SUCCESS",
+	"response": {
+		"id": "{ID}",
+		"username":"{USERNAME}",
+		"remark": "{REMARK}",
+		"amount":"{AMMOUNT}",
+		"transaction_type": "{TRANSACTION_TYPE}",
+		"reference_no": "{REFERENCE_NO}",
+		"wallet_balance": {
+			"shopping_wallet": "{SHOPPING_WALLET_BALANCE}"
+		}
+	}
+}
+```
+
+### HTTP Request
+
+`POST https://zoicraze.co.in/api/associate/transaction_revert`
+
+### HTTP Headers
+
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+Authorization | `Bearer {ACCESS_TOKEN}`
+
+### Body Parameters
+
+Parameter | Type | Description
+--------- | ------- | -----------
+reference_no | `string` | reference_no, `required`, cannot be left blank!
+amount 	 	 | `integer` | amount, `required`, cannot be left blank!
+order_no 	 | `integer` | order_no, `required`, cannot be left blank!
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+`reference_no` and `order_no` should match with the existing records when the transaction was created or wallet has been deducted.
 </aside>
 
-# Kittens
+## Get Transaction
 
-## Get All Kittens
+This endpoint get the transaction by reference_no.
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+> To authorize, use this code:
 
 ```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+# With shell, you can just pass the correct header with each request
+curl "https://zoicraze.co.in/api/associate/get_transaction" \
+  -H "Authorization: Bearer {ACCESS_TOKEN}"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+	"status": "SUCCESS",
+	"response": {
+		"id": "{ID}",
+		"username":"{USERNAME}",
+		"remark": "{REMARK}",
+		"amount":"{AMMOUNT}",
+		"transaction_type": "{TRANSACTION_TYPE}",
+		"reference_no": "{REFERENCE_NO}",
+		"wallet_balance": {
+			"shopping_wallet": "{SHOPPING_WALLET_BALANCE}"
+		}
+	}
+}
 ```
-
-This endpoint retrieves all kittens.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST https://zoicraze.co.in/api/associate/get_transaction`
 
-### Query Parameters
+### HTTP Headers
 
-Parameter | Default | Description
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+Authorization | `Bearer {ACCESS_TOKEN}`
+
+### Body Parameters
+
+Parameter | Type | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+reference_no | `string` | reference_no, `required`, cannot be left blank!
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+## Logout
 
-## Get a Specific Kitten
+This endpoint logouts the associate.
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+> To authorize, use this code:
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+# With shell, you can just pass the correct header with each request
+curl "https://zoicraze.co.in/api/associate/logout" \
+  -H "Authorization: Bearer {ACCESS_TOKEN}"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+	"message": "You have been successfully logged out!"
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET https://zoicraze.co.in/api/associate/logout`
 
-### URL Parameters
+### HTTP Headers
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
+Header | Value
+---------| --------
+Content-Type | `application/json`
+Accept | `application/json`
+Authorization | `Bearer {ACCESS_TOKEN}`
